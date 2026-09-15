@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maktab CRM - Boshqaruv Tizimi</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 Pro / Free Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  
+  <!-- Custom Modern Styling -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- =========================================================================
+       FUTURISTIC AMBIENT BACKGROUND & MESH GLOW ORBS
+       ========================================================================= -->
+  <div class="ambient-background">
+    <div class="ambient-grid"></div>
+    <div class="ambient-orb ambient-orb-1"></div>
+    <div class="ambient-orb ambient-orb-2"></div>
+    <div class="ambient-orb ambient-orb-3"></div>
+  </div>
+
+  <!-- =========================================================================
+       1. AUTHENTICATION VIEW (LOGIN MODAL)
+       ========================================================================= -->
+  <section id="auth-view">
+    <div class="auth-container">
+      <div class="auth-header">
+        <div class="brand-badge">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h1 class="auth-title">Maktab CRM Tizimi</h1>
+        <p class="auth-subtitle">Ta'lim dargohi boshqaruv paneliga xavfsiz kirish</p>
+      </div>
+
+      <div class="glass-card auth-card">
+        <!-- Quick Login Helper Hint -->
+        <div class="quick-fill-box">
+          <div class="quick-fill-info">
+            <div>Login: <code>admin</code></div>
+            <div>Parol: <code>12345</code></div>
+          </div>
+          <button type="button" id="btn-quick-fill" class="btn-quick-fill">
+            <i class="fa-solid fa-bolt"></i> Tezkor to'ldirish
+          </button>
+        </div>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label class="form-label" for="login-username">Foydalanuvchi logini</label>
+            <div class="input-wrapper">
+              <input type="text" id="login-username" class="form-input" placeholder="admin" required autocomplete="username" />
+              <i class="fa-solid fa-user-shield input-icon"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login-password">Maxfiy parol</label>
+            <div class="input-wrapper">
+              <input type="password" id="login-password" class="form-input" placeholder="•••••" required autocomplete="current-password" />
+              <i class="fa-solid fa-lock input-icon"></i>
+              <button type="button" id="btn-toggle-password" class="toggle-password" title="Parolni ko'rsatish/yashirish">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; font-size: 13px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-secondary);">
+              <input type="checkbox" id="remember-me" checked style="accent-color: var(--primary); cursor: pointer;" />
+              Eslab qolish
+            </label>
+            <span style="color: var(--accent-cyan); font-size: 12px;"><i class="fa-solid fa-shield-halved"></i> Himoyalangan</span>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            <span>Tizimga Kirish</span>
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          </button>
+        </form>
+      </div>
+
+      <div style="text-align: center; margin-top: 24px; font-size: 12px; color: var(--text-muted);">
+        &copy; 2026 Maktab CRM. Barcha huquqlar himoyalangan.
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       2. MAIN DASHBOARD APPLICATION VIEW
+       ========================================================================= -->
+  <div id="dashboard-view" style="display: none;">
+    <!-- Sidebar -->
+    <aside class="crm-sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="sidebar-brand">
+          <div class="brand-icon-wrap">
+            <i class="fa-solid fa-school"></i>
+          </div>
+          <div class="brand-text">
+            <h2>AL-XORAZMIY</h2>
+            <span>Maktab CRM v2.0</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Asosiy Menyu</div>
+        
+        <a class="nav-item active" data-tab="dashboard">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Bosh sahifa</span>
+        </a>
+
+        <a class="nav-item" data-tab="students">
+          <i class="fa-solid fa-user-graduate"></i>
+          <span>O'quvchilar</span>
+          <span class="nav-badge" id="badge-students-count">0</span>
+        </a>
+
+        <a class="nav-item" data-tab="teachers">
+          <i class="fa-solid fa-chalkboard-user"></i>
+          <span>O'qituvchilar</span>
+          <span class="nav-badge" id="badge-teachers-count">0</span>
+        </a>
+
+        <a class="nav-item" data-tab="classes">
+          <i class="fa-solid fa-chalkboard"></i>
+          <span>Sinflar & Jadval</span>
+        </a>
+
+        <div class="nav-section-title">Boshqaruv</div>
+
+        <a class="nav-item" data-tab="payments">
+          <i class="fa-solid fa-credit-card"></i>
+          <span>To'lovlar & Moliya</span>
+        </a>
+
+        <a class="nav-item" data-tab="attendance">
+          <i class="fa-solid fa-clipboard-user"></i>
+          <span>Davomat</span>
+        </a>
+
+        <a class="nav-item" data-tab="settings">
+          <i class="fa-solid fa-gear"></i>
+          <span>Sozlamalar</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar">
+            AD
+            <span class="status-dot"></span>
+          </div>
+          <div class="user-info">
+            <div class="user-name">Administrator</div>
+            <div class="user-role">Super Admin</div>
+          </div>
+        </div>
+        <button id="btn-logout-mini" class="btn-logout-mini" title="Tizimdan chiqish">
+          <i class="fa-solid fa-power-off"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Container -->
+    <main class="crm-main-content">
+      <!-- Top Sticky Header -->
+      <header class="crm-header">
+        <div class="header-left">
+          <button id="btn-toggle-sidebar" class="btn-toggle-sidebar" title="Menyuni ochish/yopish">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+
+          <div class="header-time-pill glass-pill">
+            <span class="live-indicator"></span>
+            <span id="live-date-text">Yuklanmoqda...</span>
+            <span style="opacity: 0.4;">|</span>
+            <span id="live-time-text" style="font-weight: 700; color: var(--accent-cyan);">--:--:--</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="header-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-search-input" placeholder="CRM bo'yicha qidiruv..." />
+          </div>
+
+          <button id="btn-toggle-theme" class="header-action-btn" title="Mavzuni o'zgartirish">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <button class="header-action-btn" title="Bildirishnomalar" onclick="showToast('Yangi bildirishnomalar mavjud emas', 'info')">
+            <i class="fa-solid fa-bell"></i>
+            <span class="badge-dot"></span>
+          </button>
+
+          <button id="btn-logout" class="btn btn-outline" style="padding: 8px 14px; font-size: 12px;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Chiqish</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dynamic Page Body -->
+      <div class="crm-body">
+
+        <!-- =================================================================
+             TAB 1: DASHBOARD
+             ================================================================= -->
+        <section id="section-dashboard" class="tab-section">
+          <div class="page-top">
+            <div class="page-title">
+              <h1>Boshqaruv Paneli (Umumiy Statistika)</h1>
+              <p>Maktab faoliyati, davomati va moliyaviy hisobotining real vaqtdagi ko'rsatkichlari</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline" onclick="CRM_App.switchTab('attendance')">
+                <i class="fa-solid fa-calendar-check"></i> Bugungi Davomat
+              </button>
+              <button class="btn btn-indigo" onclick="CRM_App.openModal('modal-add-student')">
+                <i class="fa-solid fa-plus"></i> Yangi O'quvchi
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Main Metric Cards -->
+          <div class="stats-grid">
+            <div class="glass-card stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Jami O'quvchilar</div>
+                <div class="stat-number">
+                  <span id="dash-total-students">0</span>
+                  <span style="font-size: 14px; color: var(--text-muted); font-weight: 500;">nafar</span>
+                </div>
+                <div class="stat-trend trend-up">
+                  <i class="fa-solid fa-arrow-trend-up"></i> +12.4% bu oyda
+                </div>
+              </div>
+              <div class="stat-icon-wrap stat-icon-blue">
+                <i class="fa-solid fa-user-graduate"></i>
+              </div>
+            </div>
+
+            <div class="glass-card stat-card">
+              <div class="stat-info">
+                <div class="stat-label">O'qituvchilar Jamoasi</div>
+                <div class="stat-number">
+                  <span id="dash-total-teachers">0</span>
+                  <span style="font-size: 14px; color: var(--text-muted); font-weight: 500;">ustoz</span>
+                </div>
+                <div class="stat-trend trend-up">
+                  <i class="fa-solid fa-star"></i> 100% Oliy toifa
+                </div>
+              </div>
+              <div class="stat-icon-wrap stat-icon-cyan">
+                <i class="fa-solid fa-chalkboard-user"></i>
+              </div>
+            </div>
+
+            <div class="glass-card stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Bugungi Davomat</div>
+                <div class="stat-number">
+                  <span>96.4%</span>
+                </div>
+                <div class="stat-trend trend-up">
+                  <i class="fa-solid fa-circle-check"></i> A'lo darajada
+                </div>
+              </div>
+              <div class="stat-icon-wrap stat-icon-emerald">
+                <i class="fa-solid fa-user-check"></i>
+              </div>
+            </div>
+
+            <div class="glass-card stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Oylik To'lov Tushumi</div>
+                <div class="stat-number" style="font-size: 20px;">
+                  <span id="dash-total-payments">0</span>
+                </div>
+                <div class="stat-trend trend-up">
+                  <i class="fa-solid fa-money-bill-trend-up"></i> Reja bo'yicha 92%
+                </div>
+              </div>
+              <div class="stat-icon-wrap stat-icon-amber">
+                <i class="fa-solid fa-wallet"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Grid -->
+          <div class="charts-grid">
+            <div class="glass-card chart-card">
+              <div class="card-header-flex">
+                <div>
+                  <h3>Haftalik Davomat Tahlili</h3>
+                  <p style="font-size: 12px; color: var(--text-muted);">Sinflar kesimidagi umumiy ishtirok darajasi</p>
+                </div>
+                <span class="badge badge-paid"><i class="fa-solid fa-chart-line"></i> Barqaror</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="attendance-chart"></canvas>
+              </div>
+            </div>
+
+            <div class="glass-card chart-card">
+              <div class="card-header-flex">
+                <div>
+                  <h3>Fan Yo'nalishlari</h3>
+                  <p style="font-size: 12px; color: var(--text-muted);">O'quvchilar tanlagan sohalar</p>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="distribution-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activities & Shortcuts -->
+          <div class="glass-card" style="padding: 24px;">
+            <div class="card-header-flex">
+              <h3>So'nggi Faoliyatlar va Yangilanishlar</h3>
+              <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;" onclick="CRM_App.renderDashboardStats()">
+                <i class="fa-solid fa-rotate-right"></i> Yangilash
+              </button>
+            </div>
+            <div id="recent-activities-list" style="display: flex; flex-direction: column; gap: 12px;">
+              <!-- Dynamic activities rendered via JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================
+             TAB 2: STUDENTS
+             ================================================================= -->
+        <section id="section-students" class="tab-section" style="display: none;">
+          <div class="page-top">
+            <div class="page-title">
+              <h1>O'quvchilar Boshqaruvi</h1>
+              <p>Maktabdagi barcha o'quvchilar ro'yxati, to'lov holati va ma'lumotlar bazasi</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline" onclick="CRM_App.exportStudentsCSV()">
+                <i class="fa-solid fa-file-csv"></i> Excel / CSV Yuklab olish
+              </button>
+              <button class="btn btn-indigo" onclick="CRM_App.openModal('modal-add-student')">
+                <i class="fa-solid fa-user-plus"></i> Yangi O'quvchi Qo'shish
+              </button>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="glass-card" style="padding: 16px 20px; margin-bottom: 20px;">
+            <div class="filter-bar" style="margin-bottom: 0;">
+              <div class="input-wrapper" style="width: 280px;">
+                <input type="text" id="student-search-input" class="form-input" placeholder="Ism, telefon yoki ota-onasi..." />
+                <i class="fa-solid fa-magnifying-glass input-icon"></i>
+              </div>
+
+              <div class="filter-group">
+                <select id="student-class-filter" class="filter-select">
+                  <option value="all">Barcha Sinflar</option>
+                  <option value="11-A">11-A Sinfi</option>
+                  <option value="11-B">11-B Sinfi</option>
+                  <option value="10-A">10-A Sinfi</option>
+                  <option value="10-B">10-B Sinfi</option>
+                  <option value="9-A">9-A Sinfi</option>
+                  <option value="9-B">9-B Sinfi</option>
+                </select>
+
+                <select id="student-payment-filter" class="filter-select">
+                  <option value="all">Barcha To'lov Holati</option>
+                  <option value="To'langan">To'langan</option>
+                  <option value="Qarzdor">Qarzdor</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Students Table -->
+          <div class="glass-card" style="padding: 10px 20px 20px;">
+            <div class="data-table-container">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>O'quvchi F.I.SH</th>
+                    <th>Sinfi</th>
+                    <th>Aloqa & Ota-onasi</th>
+                    <th>To'lov Holati</th>
+                    <th>Status</th>
+                    <th>Amallar</th>
+                  </tr>
+                </thead>
+                <tbody id="students-table-body">
+                  <!-- Dynamic rows rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================
+             TAB 3: TEACHERS
+             ================================================================= -->
+        <section id="section-teachers" class="tab-section" style="display: none;">
+          <div class="page-top">
+            <div class="page-title">
+              <h1>O'qituvchilar Jamoasi</h1>
+              <p>Maktab ustozlari, ularning dars beradigan fanlari va toifalari</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-indigo" onclick="CRM_App.openModal('modal-add-teacher')">
+                <i class="fa-solid fa-plus"></i> Yangi O'qituvchi Qo'shish
+              </button>
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding: 16px 20px; margin-bottom: 20px;">
+            <div class="filter-bar" style="margin-bottom: 0;">
+              <div class="filter-group">
+                <span style="font-size: 13px; color: var(--text-secondary);">Fan bo'yicha filter:</span>
+                <select id="teacher-subject-filter" class="filter-select">
+                  <option value="all">Barcha Fanlar</option>
+                  <option value="Matematika">Matematika & Algebra</option>
+                  <option value="Fizika">Fizika & Astronomiya</option>
+                  <option value="Ona tili">Ona tili va Adabiyot</option>
+                  <option value="Ingliz tili">Ingliz tili</option>
+                  <option value="Informatika">Informatika & IT Dasturlash</option>
+                  <option value="Kimyo">Kimyo & Biologiya</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Teachers Grid Cards -->
+          <div id="teachers-cards-grid" class="timetable-grid" style="margin-top: 0;">
+            <!-- Dynamic teacher cards rendered via JS -->
+          </div>
+        </section>
+
+        <!-- =================================================================
+             TAB 4: CLASSES & TIMETABLE
+             ================================================================= -->
+        <section id="section-classes" class="tab-section" style="display: none;">
+          <div class="page-top">
+            <div class="page-title">
+              <h1>Sinflar va Dars Jadvali</h1>
+              <p>Sinf xonalari, rahbarlari va interaktiv haftalik dars jadvali</p>
+            </div>
+          </div>
+
+          <!-- Class Selector Cards -->
+          <h3 style="font-size: 16px; margin-bottom: 14px;">Maktab Sinflari (Jadvalni ko'rish uchun sinfni tanlang):</h3>
+          <div id="classes-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px;">
+            <!-- Dynamic classes cards rendered via JS -->
+          </div>
+
+          <!-- Weekly Schedule Section -->
+          <div class="glass-card" style="padding: 24px;">
+            <div class="card-header-flex">
+              <div>
+                <h3 id="timetable-selected-class">11-A Sinfiga oid Haftalik Dars Jadvali</h3>
+                <p style="font-size: 12px; color: var(--text-muted);">Darslar boshlanish vaqti: 08:30 | Standart dars davomiyligi: 45 daqiqa</p>
+              </div>
+            </div>
+            <div id="timetable-days-container" class="timetable-grid" style="margin-top: 0;">
+              <!-- Dynamic timetable cards for Dushanba - Shanba rendered via JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================
+             TAB 5: PAYMENTS & FINANCE
+             ================================================================= -->
+        <section id="section-payments" class="tab-section" style="display: none;">
+          <div class="page-top">
+            <div class="page-title">
+              <h1>To'lovlar & Moliya Nazorati</h1>
+              <p>O'quvchilar oylik to'lovlari, kvitansiyalar va moliyaviy tushumlar hisoboti</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-emerald" onclick="CRM_App.openModal('modal-add-payment')">
+                <i class="fa-solid fa-plus-circle"></i> Yangi To'lov Qabul Qilish
+              </button>
+            </div>
+          </div>
+
+          <!-- Finance Stats Summary -->
+          <div class="stats-grid">
+            <div class="glass-card stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Jami Kutilgan Tushum</div>
+                <div class="stat-number" style="font-size: 22px;">648,000,000 so'm</div>
+                <div class="stat-trend trend-up"><i class="fa-solid fa-calendar"></i> 2026/2027 mavsum</div>
+              </div>
+              <div class="stat-icon-wrap stat-icon-blue"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+            </div>
+            <div class="glass-card stat-card">
+              <div class="stat-info">
+                <div class="stat-label">To'langan Summa</div>
+                <div class="stat-number" style="font-size: 22px; color: var(--accent-emerald);">596,200,000 so'm</div>
+                <div class="stat-trend trend-up"><i class="fa-solid fa-circle-check"></i> 92% to'landi</div>
+              </div>
+              <div class="stat-icon-wrap stat-icon-emerald"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+            </div>
+            <div class="glass-card stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Mavjud Qarzdorlik</div>
+                <div class="stat-number" style="font-size: 22px; color: var(--accent-rose);">51,800,000 so'm</div>
+                <div class="stat-trend trend-down"><i class="fa-solid fa-triangle-exclamation"></i> 8% qarz</div>
+              </div>
+              <div class="stat-icon-wrap stat-icon-amber"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            </div>
+          </div>
+
+          <!-- Transactions Table -->
+          <div class="glass-card" style="padding: 10px 20px 20px;">
+            <div class="card-header-flex" style="padding: 14px 0 0;">
+              <h3>Oxirgi To'lovlar Tarixi</h3>
+            </div>
+            <div class="data-table-container">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Tranzaksiya ID</th>
+                    <th>O'quvchi F.I.SH</th>
+                    <th>Summa</th>
+                    <th>To'lov Turi</th>
+                    <th>Sana</th>
+                    <th>Holat</th>
+                    <th>Kvitansiya</th>
+                  </tr>
+                </thead>
+                <tbody id="payments-table-body">
+                  <!-- Dynamic payments rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================
+             TAB 6: ATTENDANCE
+             ================================================================= -->
+        <section id="section-attendance" class="tab-section" style="display: none;">
+          <div class="page-top">
+            <div class="page-title">
+              <h1>Davomat Nazorati</h1>
+              <p>O'quvchilarning darslardagi kundalik qatnashuvi monitoringi</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline" onclick="CRM_App.markAllPresent()">
+                <i class="fa-solid fa-check-double"></i> Barchasini "Bor" qilish
+              </button>
+              <button class="btn btn-emerald" onclick="CRM_App.saveAttendanceRecords()">
+                <i class="fa-solid fa-floppy-disk"></i> Davomatni Saqlash
+              </button>
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding: 16px 20px; margin-bottom: 20px;">
+            <div class="filter-bar" style="margin-bottom: 0;">
+              <div class="filter-group">
+                <span style="font-size: 13px; color: var(--text-secondary);">Sinfni tanlang:</span>
+                <select id="attendance-class-select" class="filter-select">
+                  <option value="11-A">11-A Sinfi</option>
+                  <option value="11-B">11-B Sinfi</option>
+                  <option value="10-A">10-A Sinfi</option>
+                  <option value="10-B">10-B Sinfi</option>
+                  <option value="9-A">9-A Sinfi</option>
+                  <option value="9-B">9-B Sinfi</option>
+                </select>
+
+                <input type="date" class="filter-select" id="attendance-date-picker" value="2026-09-15" />
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding: 10px 20px 20px;">
+            <div class="data-table-container">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th style="width: 40px;">#</th>
+                    <th>O'quvchi F.I.SH</th>
+                    <th>Sinfi</th>
+                    <th>Bugungi Davomat Holati</th>
+                  </tr>
+                </thead>
+                <tbody id="attendance-table-body">
+                  <!-- Dynamic attendance rows via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================
+             TAB 7: SETTINGS
+             ================================================================= -->
+        <section id="section-settings" class="tab-section" style="display: none;">
+          <div class="page-top">
+            <div class="page-title">
+              <h1>Tizim Sozlamalari</h1>
+              <p>Maktab ma'lumotlari, xavfsizlik va administrator parametrlari</p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+            <!-- School Info Card -->
+            <div class="glass-card" style="padding: 24px;">
+              <h3 style="font-size: 16px; margin-bottom: 18px;"><i class="fa-solid fa-school-flag" style="color: var(--accent-cyan); margin-right: 8px;"></i> Maktab Rekvizitlari</h3>
+              <div class="form-group">
+                <label class="form-label">Maktab Nomi</label>
+                <input type="text" id="setting-school-name" class="form-input" style="padding-left: 16px;" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Direktor F.I.SH</label>
+                <input type="text" id="setting-director" class="form-input" style="padding-left: 16px;" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Telefon Raqami</label>
+                <input type="text" id="setting-phone" class="form-input" style="padding-left: 16px;" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Maktab Manzili</label>
+                <input type="text" id="setting-address" class="form-input" style="padding-left: 16px;" />
+              </div>
+              <button class="btn btn-indigo" onclick="CRM_App.saveSchoolSettings()" style="width: 100%;">
+                <i class="fa-solid fa-check"></i> Saqlash
+              </button>
+            </div>
+
+            <!-- Password Change & Maintenance Card -->
+            <div class="glass-card" style="padding: 24px;">
+              <h3 style="font-size: 16px; margin-bottom: 18px;"><i class="fa-solid fa-key" style="color: var(--accent-purple); margin-right: 8px;"></i> Parolni Yangilash</h3>
+              <div class="form-group">
+                <label class="form-label">Hozirgi Parol (Joriy: 12345)</label>
+                <input type="password" id="setting-cur-pass" class="form-input" placeholder="Hozirgi parolni kiriting" style="padding-left: 16px;" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Yangi Parol</label>
+                <input type="password" id="setting-new-pass" class="form-input" placeholder="Yangi parolni kiriting" style="padding-left: 16px;" />
+              </div>
+              <button class="btn btn-indigo" onclick="CRM_App.changeAdminPassword()" style="width: 100%; margin-bottom: 24px;">
+                <i class="fa-solid fa-lock"></i> Parolni O'zgartirish
+              </button>
+
+              <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 18px;">
+                <h4 style="font-size: 14px; margin-bottom: 8px; color: var(--accent-rose);"><i class="fa-solid fa-triangle-exclamation"></i> Boshlang'ich Holat</h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Barcha qo'shilgan o'quvchi va yozuvlarni standart demo holatiga qaytarish.</p>
+                <button class="btn btn-outline" onclick="CRM_App.resetDemoData()" style="color: var(--accent-rose); border-color: rgba(244,63,94,0.3);">
+                  <i class="fa-solid fa-rotate-left"></i> Standart Holatga Qaytarish
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 1: YANGI O'QUVCHI QO'SHISH (ADD STUDENT)
+       ========================================================================= -->
+  <div id="modal-add-student" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-user-plus" style="color: var(--primary); margin-right: 8px;"></i> Yangi O'quvchi Qo'shish</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-add-student">
+        <div class="modal-body">
+          <div class="modal-form-grid">
+            <div class="full-col form-group">
+              <label class="form-label">O'quvchi F.I.SH *</label>
+              <input type="text" id="add-student-name" class="form-input" placeholder="Masalan: Sardor Aliyev" required style="padding-left: 16px;" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sinfi *</label>
+              <select id="add-student-class" class="filter-select form-input" style="padding-left: 16px;">
+                <option value="11-A">11-A Sinfi</option>
+                <option value="11-B">11-B Sinfi</option>
+                <option value="10-A">10-A Sinfi</option>
+                <option value="10-B">10-B Sinfi</option>
+                <option value="9-A">9-A Sinfi</option>
+                <option value="9-B">9-B Sinfi</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">To'lov Holati</label>
+              <select id="add-student-payment" class="filter-select form-input" style="padding-left: 16px;">
+                <option value="To'langan">To'langan</option>
+                <option value="Qarzdor">Qarzdor</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Telefon Raqami *</label>
+              <input type="text" id="add-student-phone" class="form-input" placeholder="+998 90 123 45 67" required style="padding-left: 16px;" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ota-onasi F.I.SH</label>
+              <input type="text" id="add-student-parent" class="form-input" placeholder="Akmal Aliyev" style="padding-left: 16px;" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline btn-cancel-modal">Bekor qilish</button>
+          <button type="submit" class="btn btn-indigo">O'quvchini Saqlash</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: O'QUVCHINI TAHRIRLASH (EDIT STUDENT)
+       ========================================================================= -->
+  <div id="modal-edit-student" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-pen-to-square" style="color: var(--accent-cyan); margin-right: 8px;"></i> O'quvchi Ma'lumotlarini Tahrirlash</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-student-id" />
+        <div class="modal-form-grid">
+          <div class="full-col form-group">
+            <label class="form-label">O'quvchi F.I.SH *</label>
+            <input type="text" id="edit-student-name" class="form-input" style="padding-left: 16px;" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sinfi *</label>
+            <select id="edit-student-class" class="filter-select form-input" style="padding-left: 16px;">
+              <option value="11-A">11-A Sinfi</option>
+              <option value="11-B">11-B Sinfi</option>
+              <option value="10-A">10-A Sinfi</option>
+              <option value="10-B">10-B Sinfi</option>
+              <option value="9-A">9-A Sinfi</option>
+              <option value="9-B">9-B Sinfi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">To'lov Holati</label>
+            <select id="edit-student-payment" class="filter-select form-input" style="padding-left: 16px;">
+              <option value="To'langan">To'langan</option>
+              <option value="Qarzdor">Qarzdor</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefon Raqami *</label>
+            <input type="text" id="edit-student-phone" class="form-input" style="padding-left: 16px;" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ota-onasi F.I.SH</label>
+            <input type="text" id="edit-student-parent" class="form-input" style="padding-left: 16px;" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline btn-cancel-modal">Bekor qilish</button>
+        <button type="button" class="btn btn-indigo" onclick="CRM_App.saveEditStudent()">O'zgarishlarni Saqlash</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: YANGI O'QITUVCHI QO'SHISH (ADD TEACHER)
+       ========================================================================= -->
+  <div id="modal-add-teacher" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-chalkboard-user" style="color: var(--accent-cyan); margin-right: 8px;"></i> Yangi O'qituvchi Qo'shish</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-add-teacher">
+        <div class="modal-body">
+          <div class="modal-form-grid">
+            <div class="full-col form-group">
+              <label class="form-label">O'qituvchi F.I.SH *</label>
+              <input type="text" id="add-teacher-name" class="form-input" placeholder="Masalan: Jamshid Karimov" required style="padding-left: 16px;" />
+            </div>
+            <div class="full-col form-group">
+              <label class="form-label">Dars Beradigan Fani *</label>
+              <input type="text" id="add-teacher-subject" class="form-input" placeholder="Masalan: Matematika & Geometriya" required style="padding-left: 16px;" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Telefon Raqami *</label>
+              <input type="text" id="add-teacher-phone" class="form-input" placeholder="+998 90 999 88 77" required style="padding-left: 16px;" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ish Tajribasi</label>
+              <input type="text" id="add-teacher-exp" class="form-input" placeholder="Masalan: 7 yil" style="padding-left: 16px;" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Oylik Maoshi</label>
+              <input type="text" id="add-teacher-salary" class="form-input" placeholder="8,000,000 so'm" style="padding-left: 16px;" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Biriktirilgan Sinflar</label>
+              <input type="text" id="add-teacher-classes" class="form-input" placeholder="10-A, 11-A" style="padding-left: 16px;" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline btn-cancel-modal">Bekor qilish</button>
+          <button type="submit" class="btn btn-indigo">O'qituvchini Saqlash</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 4: YANGI TO'LOV QABUL QILISH (ADD PAYMENT)
+       ========================================================================= -->
+  <div id="modal-add-payment" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-hand-holding-dollar" style="color: var(--accent-emerald); margin-right: 8px;"></i> Yangi To'lov Qabul Qilish</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-add-payment">
+        <div class="modal-body">
+          <div class="modal-form-grid">
+            <div class="full-col form-group">
+              <label class="form-label">O'quvchi F.I.SH *</label>
+              <input type="text" id="pay-student-name" class="form-input" placeholder="O'quvchi ismini kiriting" required style="padding-left: 16px;" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sinfi</label>
+              <select id="pay-student-class" class="filter-select form-input" style="padding-left: 16px;">
+                <option value="11-A">11-A Sinfi</option>
+                <option value="11-B">11-B Sinfi</option>
+                <option value="10-A">10-A Sinfi</option>
+                <option value="10-B">10-B Sinfi</option>
+                <option value="9-A">9-A Sinfi</option>
+                <option value="9-B">9-B Sinfi</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">To'lov Summasi (so'm) *</label>
+              <input type="text" id="pay-amount" class="form-input" placeholder="1,200,000" required style="padding-left: 16px;" />
+            </div>
+            <div class="full-col form-group">
+              <label class="form-label">To'lov Usuli</label>
+              <select id="pay-method" class="filter-select form-input" style="padding-left: 16px;">
+                <option value="Click">Click</option>
+                <option value="Payme">Payme</option>
+                <option value="Uzum Bank">Uzum Bank</option>
+                <option value="Naqd">Naqd pul</option>
+                <option value="Bank o'tkazmasi">Bank hisob raqami</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline btn-cancel-modal">Bekor qilish</button>
+          <button type="submit" class="btn btn-emerald">To'lovni Tasdiqlash & Kvitansiya</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
